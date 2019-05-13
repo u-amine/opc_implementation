@@ -3,8 +3,7 @@ var opcua = require("node-opcua");
 var async = require("async");
 var WebSocket = require('ws');
 
-const host = "localhost:";
-const port = "8081";
+//needs to be changed
 var client = new opcua.OPCUAClient();
 var endpointUrl = "opc.tcp://" + require("os").hostname() + ":4334/UA/MyLittleServer";
 
@@ -93,25 +92,7 @@ async.series([
         console.log("terminated");
        });
        
-    //    setTimeout(function(){
-    //        the_subscription.terminate(callback);
-    //    },10000);
-       
-       // install monitored item
-    //    var monitoredItem  = the_subscription.monitor({
-    //        nodeId: opcua.resolveNodeId("ns=1;s=free_memory"),
-    //        attributeId: opcua.AttributeIds.Value
-    //    },
-    //    {
-    //        samplingInterval: 100,
-    //        discardOldest: true,
-    //        queueSize: 10
-    //    },
-    //    opcua.read_service.TimestampsToReturn.Both
-    //    );
-    //    console.log("-------------------------------------");
-       
-
+       //needs to be changed
        var monitoredItem1  = the_subscription.monitor({
            nodeId: opcua.resolveNodeId("ns=1;s=rHMI_CytroBoxDruckistwert_gb"),
            attributeId: opcua.AttributeIds.Value
@@ -124,7 +105,8 @@ async.series([
        opcua.read_service.TimestampsToReturn.Both
        );
        console.log("-------------------------------------");
-
+        
+        //needs to be changed
        var monitoredItem2  = the_subscription.monitor({
         nodeId: opcua.resolveNodeId("ns=1;s=rHMI_CytroBoxDrehzahlistwert_gb"),
         attributeId: opcua.AttributeIds.Value
@@ -138,29 +120,6 @@ async.series([
         );
         console.log("-------------------------------------");
 
-        const ws = new WebSocket("ws://" + host + port);
-        console.log('sent');
-        ws.onopen = function (event) {
-            monitoredItem1.on("changed",function(dataValue){
-
-                let pressureData = {
-                    pressure: (dataValue.value.value).toString()
-                };
-                ws.send(JSON.stringify(pressureData));
-            
-                console.log(" % pressure = ", (dataValue.value.value).toString());
-            });
-
-            monitoredItem2.on("changed",function(dataValue){
-                console.log(" % rotation = ", dataValue.value.value);
-
-                let rotationData = {
-                    rotation: (dataValue.value.value).toString()
-                };
-                ws.send(JSON.stringify(rotationData));
-                
-            });
-        };
     },
 
     // close session
